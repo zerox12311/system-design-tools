@@ -1,0 +1,115 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { padding: 10px; }
+
+.estimator {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #d9dee7;
+  border-radius: 14px;
+}
+
+.control-row {
+  display: grid;
+  grid-template-columns: 220px minmax(180px, 1fr) 86px;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.control-row label { color: #40516c; font-size: 15px; }
+.control-row span { text-align: right; color: #24324a; font-weight: 600; font-size: 15px; }
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #8dc0f2;
+  cursor: pointer;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.result-card {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 17px 18px;
+  min-height: 110px;
+}
+
+.result-title { color: #40516c; font-size: 14px; }
+.result-number { margin-top: 9px; font-size: 24px; line-height: 1; font-weight: 700; }
+.red-number { color: #dc2626; }
+.result-note { margin-top: 13px; color: #40516c; font-size: 13px; }
+
+.verdict {
+  margin-top: 12px;
+  padding: 16px 18px 17px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.verdict-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  margin-bottom: 8px;
+}
+.verdict-title { font-size: 16px; font-weight: 700; margin-bottom: 7px; }
+.verdict-text { font-size: 14px; line-height: 1.45; color: #334155; }
+
+.verdict-single {
+  background: #dcfce7;
+  border-color: #22c55e;
+}
+.verdict-single .verdict-label { color: #16a34a; }
+
+.verdict-sharded {
+  background: #fef3c7;
+  border-color: #d97706;
+}
+.verdict-sharded .verdict-label { color: #c25c00; }
+
+.verdict-extreme {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+.verdict-extreme .verdict-label { color: #dc2626; }
+
+.formula {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #40516c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+}
+
+.explanation {
+  margin: 12px 0 0;
+  color: #1f2937;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.explanation strong { color: #dc2626; }
+
+@media (max-width: 700px) {
+  .control-row { grid-template-columns: 1fr; gap: 6px; margin-bottom: 19px; }
+  .control-row span { text-align: left; }
+  .results { grid-template-columns: 1fr; }
+}
