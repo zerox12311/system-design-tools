@@ -29,8 +29,8 @@ rateInput.addEventListener("input", updateControls);
 
 function updateControls() {
   document.getElementById("limitValue").textContent = limitInput.value;
-  document.getElementById("windowValue").textContent = windowInput.value + "s";
-  document.getElementById("rateValue").textContent = rateInput.value + "/s";
+  document.getElementById("windowValue").textContent = windowInput.value + " 秒";
+  document.getElementById("rateValue").textContent = rateInput.value + " 次/秒";
 }
 
 document.querySelectorAll(".tab").forEach(button => {
@@ -49,41 +49,52 @@ function play() {
   if (timer) {
     clearInterval(timer);
     timer = null;
-    playButton.innerHTML = "▷&nbsp; Play";
+    playButton.innerHTML = "▷&nbsp; 播放";
     return;
   }
+
   const stream = document.getElementById("stream");
   if (stream.querySelector(".placeholder")) stream.innerHTML = "";
+
   timer = setInterval(tick, 100);
-  playButton.innerHTML = "■&nbsp; Stop";
+  playButton.innerHTML = "■&nbsp; 停止";
 }
 
 function reset() {
   clearInterval(timer);
   timer = null;
-  playButton.innerHTML = "▷&nbsp; Play";
+  playButton.innerHTML = "▷&nbsp; 播放";
+
   time = 0;
   allowed = 0;
   denied = 0;
   requestAccumulator = 0;
+
   resetAlgorithmState();
+
   document.getElementById("allowed").textContent = "0";
   document.getElementById("denied").textContent = "0";
   document.getElementById("time").textContent = "0.0";
-  document.getElementById("stream").innerHTML = '<span class="placeholder">press play...</span>';
+  document.getElementById("stream").innerHTML = '<span class="placeholder">按下播放開始模擬...</span>';
+
   updateMetric();
 }
 
 function resetAlgorithmState() {
   const limit = Number(limitInput.value);
+
   fixedCount = 0;
   fixedWindowIndex = 0;
+
   slidingCurrentCount = 0;
   slidingPreviousCount = 0;
   slidingWindowIndex = 0;
+
   slidingLog = [];
+
   tokens = limit;
   lastTokenUpdate = time;
+
   leakyLevel = 0;
   lastLeakUpdate = time;
 }
@@ -91,17 +102,23 @@ function resetAlgorithmState() {
 function tick() {
   const dt = 0.1;
   time += dt;
+
   const arrivalRate = Number(rateInput.value);
   requestAccumulator += arrivalRate * dt;
+
   while (requestAccumulator >= 1) {
     requestAccumulator -= 1;
+
     const ok = processRequest();
     ok ? allowed++ : denied++;
+
     addRequestDot(ok);
   }
+
   document.getElementById("allowed").textContent = allowed;
   document.getElementById("denied").textContent = denied;
   document.getElementById("time").textContent = time.toFixed(1);
+
   updateMetric();
 }
 
@@ -118,14 +135,17 @@ function fixedWindowRequest() {
   const limit = Number(limitInput.value);
   const windowLength = Number(windowInput.value);
   const currentIndex = Math.floor(time / windowLength);
+
   if (currentIndex !== fixedWindowIndex) {
     fixedWindowIndex = currentIndex;
     fixedCount = 0;
   }
+
   if (fixedCount < limit) {
     fixedCount++;
     return true;
   }
+
   return false;
 }
 
@@ -133,19 +153,23 @@ function slidingCounterRequest() {
   const limit = Number(limitInput.value);
   const windowLength = Number(windowInput.value);
   const currentIndex = Math.floor(time / windowLength);
+
   if (currentIndex !== slidingWindowIndex) {
     const jump = currentIndex - slidingWindowIndex;
     slidingPreviousCount = jump === 1 ? slidingCurrentCount : 0;
     slidingCurrentCount = 0;
     slidingWindowIndex = currentIndex;
   }
+
   const elapsed = time % windowLength;
   const previousWeight = 1 - elapsed / windowLength;
   const estimatedCount = slidingPreviousCount * previousWeight + slidingCurrentCount;
+
   if (estimatedCount < limit) {
     slidingCurrentCount++;
     return true;
   }
+
   return false;
 }
 
@@ -153,11 +177,14 @@ function slidingLogRequest() {
   const limit = Number(limitInput.value);
   const windowLength = Number(windowInput.value);
   const cutoff = time - windowLength;
+
   while (slidingLog.length && slidingLog[0] <= cutoff) slidingLog.shift();
+
   if (slidingLog.length < limit) {
     slidingLog.push(time);
     return true;
   }
+
   return false;
 }
 
@@ -165,11 +192,14 @@ function tokenBucketRequest() {
   const capacity = Number(limitInput.value);
   const windowLength = Number(windowInput.value);
   const refillRate = capacity / windowLength;
+
   refillTokens(capacity, refillRate);
+
   if (tokens >= 1) {
     tokens -= 1;
     return true;
   }
+
   return false;
 }
 
@@ -183,11 +213,14 @@ function leakyBucketRequest() {
   const capacity = Number(limitInput.value);
   const windowLength = Number(windowInput.value);
   const leakRate = capacity / windowLength;
+
   leakBucket(leakRate);
+
   if (leakyLevel + 1 <= capacity) {
     leakyLevel += 1;
     return true;
   }
+
   return false;
 }
 
@@ -200,40 +233,56 @@ function leakBucket(leakRate) {
 function addRequestDot(ok) {
   const stream = document.getElementById("stream");
   const dot = document.createElement("span");
+
   dot.className = "request-dot " + (ok ? "allowed" : "denied");
   stream.appendChild(dot);
+
   while (stream.children.length > 80) stream.removeChild(stream.firstChild);
 }
 
 function updateMetric() {
   const limit = Number(limitInput.value);
+
   if (algorithm === "fixed") {
-    showProgress(fixedCount, limit, `window count ${fixedCount} / ${limit}`);
+    showProgress(fixedCount, limit, `視窗計數 ${fixedCount} / ${limit}`);
+
   } else if (algorithm === "sliding") {
     const windowLength = Number(windowInput.value);
     const elapsed = time % windowLength;
     const previousWeight = 1 - elapsed / windowLength;
     const estimate = slidingPreviousCount * previousWeight + slidingCurrentCount;
-    showProgress(estimate, limit, `estimated count ${estimate.toFixed(1)} / ${limit}`);
+
+    showProgress(estimate, limit, `估算計數 ${estimate.toFixed(1)} / ${limit}`);
+
   } else if (algorithm === "log") {
     const cutoff = time - Number(windowInput.value);
+
     while (slidingLog.length && slidingLog[0] <= cutoff) slidingLog.shift();
-    showProgress(slidingLog.length, limit, `requests in window ${slidingLog.length} / ${limit}`);
+
+    showProgress(slidingLog.length, limit, `視窗內 Request 數量 ${slidingLog.length} / ${limit}`);
+
   } else if (algorithm === "token") {
     const refillRate = limit / Number(windowInput.value);
+
     refillTokens(limit, refillRate);
-    showProgress(tokens, limit, `tokens available ${tokens.toFixed(1)} / ${limit}`, true);
+
+    showProgress(tokens, limit, `可用 Token ${tokens.toFixed(1)} / ${limit}`, true);
+
   } else if (algorithm === "leaky") {
     const leakRate = limit / Number(windowInput.value);
+
     leakBucket(leakRate);
-    showProgress(leakyLevel, limit, `bucket level ${leakyLevel.toFixed(1)} / ${limit}`);
+
+    showProgress(leakyLevel, limit, `Bucket 水位 ${leakyLevel.toFixed(1)} / ${limit}`);
   }
 }
 
 function showProgress(value, max, label, reverse = false) {
   metricLabel.textContent = label;
+
   let percent = max === 0 ? 0 : (value / max) * 100;
   percent = Math.max(0, Math.min(100, percent));
+
   progressBar.style.width = percent + "%";
   progressBar.classList.toggle("full", reverse ? value < 1 : value >= max);
 }
