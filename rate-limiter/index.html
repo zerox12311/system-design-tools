@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant-TW">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rate Limiter Simulator</title>
+  <title>Rate Limiter 模擬器</title>
   <link rel="stylesheet" href="./style.css" />
   <script src="./script.js" defer></script>
 </head>
 <body>
   <div class="simulator">
     <div class="tabs">
-      <button class="tab active" data-algorithm="fixed">Fixed window</button>
-      <button class="tab" data-algorithm="sliding">Sliding counter</button>
-      <button class="tab" data-algorithm="log">Sliding log</button>
-      <button class="tab" data-algorithm="token">Token bucket</button>
-      <button class="tab" data-algorithm="leaky">Leaky bucket</button>
+      <button class="tab active" data-algorithm="fixed">Fixed Window（固定視窗）</button>
+      <button class="tab" data-algorithm="sliding">Sliding Counter（滑動視窗計數器）</button>
+      <button class="tab" data-algorithm="log">Sliding Log（滑動視窗日誌）</button>
+      <button class="tab" data-algorithm="token">Token Bucket（令牌桶）</button>
+      <button class="tab" data-algorithm="leaky">Leaky Bucket（漏桶）</button>
     </div>
 
-    <div class="control"><label>Limit per window</label><input id="limit" type="range" min="1" max="20" value="8"><span id="limitValue">8</span></div>
-    <div class="control"><label>Window length</label><input id="window" type="range" min="1" max="20" value="8"><span id="windowValue">8s</span></div>
-    <div class="control"><label>Arrival rate</label><input id="rate" type="range" min="1" max="10" value="2"><span id="rateValue">2/s</span></div>
+    <div class="control"><label>每個視窗的限制</label><input id="limit" type="range" min="1" max="20" value="8"><span id="limitValue">8</span></div>
+    <div class="control"><label>視窗長度</label><input id="window" type="range" min="1" max="20" value="8"><span id="windowValue">8 秒</span></div>
+    <div class="control"><label>請求到達速率</label><input id="rate" type="range" min="1" max="10" value="2"><span id="rateValue">2 次/秒</span></div>
 
-    <div class="actions"><button id="playButton">▷&nbsp; Play</button><button id="resetButton">↻&nbsp; Reset</button></div>
+    <div class="actions"><button id="playButton">▷&nbsp; 播放</button><button id="resetButton">↻&nbsp; 重設</button></div>
 
-    <div class="stream-title">request stream (newest on the right) — <span class="legend allowed-dot"></span> allowed <span class="legend denied-dot"></span> denied</div>
-    <div id="stream" class="stream"><span class="placeholder">press play...</span></div>
+    <div class="stream-title">Request Stream（最新的在右側）— <span class="legend allowed-dot"></span> 允許 <span class="legend denied-dot"></span> 拒絕</div>
+    <div id="stream" class="stream"><span class="placeholder">按下播放開始模擬...</span></div>
 
-    <div id="metricLabel" class="metric-label">window count 0 / 8</div>
+    <div id="metricLabel" class="metric-label">視窗計數 0 / 8</div>
     <div class="progress"><div id="progressBar"></div></div>
 
-    <div class="stats"><span>allowed <strong id="allowed">0</strong></span><span>denied <strong id="denied">0</strong></span><span>t = <span id="time">0.0</span>s</span></div>
+    <div class="stats"><span>允許 <strong id="allowed">0</strong></span><span>拒絕 <strong id="denied">0</strong></span><span>時間 = <span id="time">0.0</span> 秒</span></div>
   </div>
 </body>
 </html>
