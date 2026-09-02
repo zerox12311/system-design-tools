@@ -93,6 +93,16 @@ input[type="range"] {
   font-size: 14px;
 }
 
+.explanation {
+  margin: 14px 0 0;
+  color: #1f2937;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.blue-text { color: #2563eb; }
+.red-text { color: #dc2626; }
+
 @media (max-width: 700px) {
   .control-row {
     grid-template-columns: 1fr;
