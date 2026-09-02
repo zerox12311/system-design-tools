@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mutual Match Race Visualizer</title>
+  <link rel="stylesheet" href="./style.css?v=1" />
+  <script src="./script.js?v=1" defer></script>
+</head>
+<body>
+  <main class="race-tool">
+    <div class="scenario-tabs" role="tablist" aria-label="Match race scenarios">
+      <button class="tab active" type="button" data-scenario="sequential" role="tab" aria-selected="true">依序 Like</button>
+      <button class="tab" type="button" data-scenario="simultaneous" role="tab" aria-selected="false">同時 Like（Race）</button>
+    </div>
+
+    <div class="controls" aria-label="Playback controls">
+      <button id="play" class="control-button" type="button">
+        <span id="playIcon" aria-hidden="true">▶</span>
+        <span id="playText">播放</span>
+      </button>
+      <button id="step" class="control-button" type="button">
+        <span aria-hidden="true">▷</span>
+        <span>下一步</span>
+      </button>
+      <button id="reset" class="control-button" type="button">
+        <span aria-hidden="true">↻</span>
+        <span>重設</span>
+      </button>
+    </div>
+
+    <section class="timeline" aria-label="Timeline">
+      <div id="track" class="track">
+        <div id="progress" class="progress"></div>
+        <button class="dot active" type="button" data-step="0" aria-label="t0"></button>
+        <button class="dot" type="button" data-step="1" aria-label="t1"></button>
+        <button class="dot" type="button" data-step="2" aria-label="t2"></button>
+        <button class="dot" type="button" data-step="3" aria-label="t3"></button>
+      </div>
+      <div class="time-labels" aria-hidden="true">
+        <span>t0</span>
+        <span>t1</span>
+        <span>t2</span>
+        <span>t3</span>
+      </div>
+    </section>
+
+    <section class="state">
+      <h2 id="stepTitle">t0 - 還沒有事情發生</h2>
+
+      <div class="shards">
+        <article id="shardA" class="state-card">
+          <div class="card-label">shard(A)</div>
+          <pre>A:（尚無 Row）</pre>
+        </article>
+        <article id="shardB" class="state-card">
+          <div class="card-label">shard(B)</div>
+          <pre>B → A: like（已存在）</pre>
+        </article>
+      </div>
+
+      <article id="result" class="result-card neutral">
+        <div class="card-label">result</div>
+        <strong>尚未形成 Match</strong>
+      </article>
+
+      <p id="caption" class="caption">Bob 先前已經 Like Alice，這筆 Row 正在 shard(B) 等待被查到。</p>
+    </section>
+  </main>
+</body>
+</html>
