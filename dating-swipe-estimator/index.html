@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dating Swipe Estimator</title>
+  <link rel="stylesheet" href="./style.css?v=1" />
+  <script src="./script.js?v=1" defer></script>
+</head>
+<body>
+  <main class="estimator">
+    <div class="control-row">
+      <label for="dau">每日活躍使用者</label>
+      <input id="dau" type="range" min="5000000" max="100000000" step="5000000" value="50000000" />
+      <span id="dauValue">50M</span>
+    </div>
+
+    <div class="control-row">
+      <label for="swipes">每位使用者每天 Swipe 次數</label>
+      <input id="swipes" type="range" min="20" max="300" step="20" value="100" />
+      <span id="swipesValue">100</span>
+    </div>
+
+    <div class="control-row">
+      <label for="peak">晚間尖峰倍數</label>
+      <input id="peak" type="range" min="1" max="5" step="1" value="3" />
+      <span id="peakValue">3×</span>
+    </div>
+
+    <div class="control-row">
+      <label for="bytes">每筆 Swipe Row 大小</label>
+      <input id="bytes" type="range" min="16" max="64" step="16" value="32" />
+      <span id="bytesValue">32B</span>
+    </div>
+
+    <section class="results">
+      <article class="result-card">
+        <div class="result-title">每天 Swipe 數</div>
+        <div id="swipesPerDay" class="result-number red-number">5.0B</div>
+        <div id="swipesFormula" class="result-note">50M × 100</div>
+      </article>
+      <article class="result-card">
+        <div class="result-title">平均每秒寫入數</div>
+        <div id="avgWrites" class="result-number red-number">58K/s</div>
+        <div class="result-note">÷ 86,400s</div>
+      </article>
+      <article class="result-card">
+        <div class="result-title">晚間尖峰每秒寫入數</div>
+        <div id="peakWrites" class="result-number red-number">174K/s</div>
+        <div id="peakFormula" class="result-note">3× average</div>
+      </article>
+      <article class="result-card">
+        <div class="result-title">每日 Swipe 儲存量</div>
+        <div id="storage" class="result-number">160 GB</div>
+        <div id="storageFormula" class="result-note">5.0B × 32B</div>
+      </article>
+    </section>
+
+    <section id="verdict" class="verdict verdict-extreme">
+      <div class="verdict-label">SCALING VERDICT</div>
+      <div id="verdictTitle" class="verdict-title">Extreme Scale Architecture</div>
+      <div id="verdictText" class="verdict-text">尖峰寫入超過 100K/s。需要 Sharded Database、Append-only Log（Kafka）與 Precomputed Candidate Queue，以保護資料庫層。</div>
+    </section>
+
+    <div id="formula" class="formula">writes = 50M × 100 ÷ 86,400s ≈ 58K/s average, 174K/s at peak</div>
+
+    <p class="explanation">Candidate Feed 在一次 Session 中可能只被取得數十次，但其中每張卡片都會產生一次 <strong>Swipe Write</strong>。Match 更少——只有少數 Swipe 會形成 Mutual Match。因此應優先依照 Write Path 的負載來估算系統規模。</p>
+  </main>
+</body>
+</html>
