@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rate Limiter 容量估算工具</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <main class="estimator">
+    <div class="control-row">
+      <label for="decisions">每秒決策數</label>
+      <input id="decisions" type="range" min="100000" max="10000000" step="100000" value="5600000" />
+      <span id="decisionsValue">5.6M</span>
+    </div>
+
+    <div class="control-row">
+      <label for="checks">每個請求的 Counter Check 數</label>
+      <input id="checks" type="range" min="1" max="5" step="1" value="2" />
+      <span id="checksValue">2</span>
+    </div>
+
+    <div class="control-row">
+      <label for="ceiling">每個 Shard 的上限</label>
+      <input id="ceiling" type="range" min="10000" max="500000" step="10000" value="100000" />
+      <span id="ceilingValue">100K/s</span>
+    </div>
+
+    <div class="control-row">
+      <label for="instances">Hybrid：Instance 數</label>
+      <input id="instances" type="range" min="1" max="100" step="1" value="10" />
+      <span id="instancesValue">10</span>
+    </div>
+
+    <div class="control-row">
+      <label for="reqPerInstance">Hybrid：每個 Instance 的 req/s</label>
+      <input id="reqPerInstance" type="range" min="100" max="10000" step="100" value="1000" />
+      <span id="reqPerInstanceValue">1K</span>
+    </div>
+
+    <div class="control-row">
+      <label for="syncInterval">Hybrid：同步間隔</label>
+      <input id="syncInterval" type="range" min="10" max="1000" step="10" value="100" />
+      <span id="syncIntervalValue">100ms</span>
+    </div>
+
+    <section class="results">
+      <article class="result-card">
+        <div class="result-title">Counter Shard 數</div>
+        <div id="shardCount" class="result-number blue">112</div>
+        <div id="shardFormula" class="result-note">11M ops/s ÷ 100K</div>
+      </article>
+
+      <article class="result-card">
+        <div class="result-title">Hybrid 超額放行量</div>
+        <div id="overAllowance" class="result-number red">1K</div>
+        <div class="result-note">每次同步間隔可能額外放行的請求數</div>
+      </article>
+    </section>
+
+    <div id="formula" class="formula">over-allow = 10 × 1K/s × 0.10s = 1K</div>
+  </main>
+</body>
+</html>
