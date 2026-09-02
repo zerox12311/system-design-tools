@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Typeahead 容量估算工具</title>
+  <link rel="stylesheet" href="./style.css?v=1" />
+  <script src="./script.js?v=1" defer></script>
+</head>
+<body>
+  <main class="estimator">
+    <div class="control-row">
+      <label for="searches">每秒搜尋數</label>
+      <input id="searches" type="range" min="10000" max="500000" step="10000" value="100000" />
+      <span id="searchesValue">100K</span>
+    </div>
+
+    <div class="control-row">
+      <label for="calls">每次搜尋的 Suggest Call 數</label>
+      <input id="calls" type="range" min="1" max="10" step="1" value="5" />
+      <span id="callsValue">5</span>
+    </div>
+
+    <div class="control-row">
+      <label for="queries">Distinct Query String 數</label>
+      <input id="queries" type="range" min="10000000" max="500000000" step="10000000" value="100000000" />
+      <span id="queriesValue">100M</span>
+    </div>
+
+    <div class="control-row">
+      <label for="bytesPerNode">每個 Trie Node 的 Bytes</label>
+      <input id="bytesPerNode" type="range" min="40" max="240" step="10" value="120" />
+      <span id="bytesPerNodeValue">120B</span>
+    </div>
+
+    <section class="results">
+      <article class="result-card">
+        <div class="result-title">Suggest QPS（峰值）</div>
+        <div id="suggestQps" class="result-number blue">500K/s</div>
+        <div id="suggestFormula" class="result-note">100K searches × 5 calls</div>
+      </article>
+
+      <article class="result-card">
+        <div class="result-title">Ranked Trie in RAM</div>
+        <div id="ramSize" class="result-number">12 GB</div>
+        <div id="ramFormula" class="result-note">100M nodes × 120B</div>
+      </article>
+    </section>
+
+    <div id="formula" class="formula">suggest QPS = 100K searches/s × 5 debounced calls = 500K/s</div>
+
+    <p class="explanation">
+      每次 Keystroke（按鍵輸入）都會產生一次讀取；<strong class="blue-text">Debounce（防抖）</strong> 是讓這股讀取洪流維持可控的關鍵。整個 Ranked Trie（排序 Trie）都能放進 RAM，因此查詢只需要沿著指標走訪，不需要在每次請求時重新做 Ranking（排序）。
+    </p>
+  </main>
+</body>
+</html>
