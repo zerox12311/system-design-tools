@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rate Limiter Design Checkpoint</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <main class="checkpoint">
+    <div class="eyebrow">ⓘ DESIGN CHECKPOINT</div>
+
+    <p class="question">
+      Rate Limiter 會做出 Allow / Deny 決策。當結果是 Deny 時，應該由 Rate Limiter Service 自己回傳 HTTP 429，還是回傳 200 並交由 Gateway 根據 Verdict 處理？
+    </p>
+
+    <button class="choice wrong" data-result="wrong">
+      Rate Limiter 直接回傳 429，讓 Client 立即看到拒絕結果
+    </button>
+
+    <button class="choice correct" data-result="correct">
+      Rate Limiter 回傳 200 並附上 <code>allowed:false</code>，由 Gateway 將 Deny 轉成 429
+    </button>
+
+    <div id="explanation" class="explanation hidden">
+      Rate Limiter 比較像一個「決策服務（Oracle）」，而不是實際承接 Client Request 的 Request Path。它只負責回答 Allow 或 Deny，無論結果為何都可以回傳 200；真正持有 Client Connection 的 Gateway，再把 Deny 轉成 HTTP 429，並加上 <code>Retry-After</code>。
+      <br><br>
+      把 429 留在 Gateway 處理，也能讓同一套 Rate Limiter 同時服務 API Gateway、RPC Client 或 Batch Job，讓不同呼叫端依照相同 Verdict 採取不同動作。
+    </div>
+  </main>
+</body>
+</html>
