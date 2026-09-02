@@ -117,7 +117,6 @@ function render() {
   dots.forEach((dot, index) => {
     dot.classList.toggle('active', index === step);
     dot.classList.toggle('done', index < step);
-    dot.classList.toggle('complete', state.success && index === step);
   });
 }
 

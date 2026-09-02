@@ -130,11 +130,6 @@ body { padding: 10px; }
   background: #2563eb;
 }
 
-.dot.complete {
-  border-color: #16a34a;
-  background: #16a34a;
-}
-
 .time-labels {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
