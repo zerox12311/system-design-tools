@@ -60,6 +60,10 @@
     </section>
 
     <div id="formula" class="formula">over-allow = 10 × 1K/s × 0.10s = 1K</div>
+
+    <p class="explanation">
+      單一中央 Shard（分片）很快就會接近它的處理上限，因此當決策速率很高時，就必須採用 <strong class="blue-text">Sharding by Key（依 Key 分片）</strong>。改用 Hybrid（混合式）設計，會以每個同步間隔內可控的 <strong class="red-text">Bounded Over-allowance（有界超額放行）</strong> 為代價，換取微秒等級的本地決策速度——這對 Soft Limit（軟限制）來說可以接受，但不適合用於計費。
+    </p>
   </main>
 </body>
 </html>
