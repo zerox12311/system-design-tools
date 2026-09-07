@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>影片儲存與流量估算器</title><link rel="stylesheet" href="./style.css?v=1"><script src="./script.js?v=1" defer></script></head>
+<body><main class="tool">
+  <section class="inputs" aria-label="可調整參數"><p class="section-label">可調整的假設</p>
+    <div class="input-row"><label for="watch">每日觀看時數</label><input id="watch" type="range" min="0.1" max="5" step="0.1" value="0.1"><output id="watchOut" for="watch"></output></div>
+    <div class="input-row"><label for="bitrate">平均位元率</label><input id="bitrate" type="range" min="1" max="10" step="0.5" value="1"><output id="bitrateOut" for="bitrate"></output></div>
+    <div class="input-row"><label for="upload">每分鐘上傳時數</label><input id="upload" type="range" min="100" max="1000" step="50" value="100"><output id="uploadOut" for="upload"></output></div>
+    <div class="input-row storage-input"><label for="storageBitrate">儲存位元率 <small>僅影響資料匯入</small></label><input id="storageBitrate" type="range" min="1" max="10" step="0.01" value="3.33"><output id="storageBitrateOut" for="storageBitrate"></output></div>
+  </section>
+  <section aria-label="資料匯入估算"><h2>資料匯入 <span>只寫入一次</span></h2><div class="cards"><article><p>新增儲存資料</p><strong id="storedRate"></strong><small>由儲存位元率決定；不含多畫質轉碼副本。</small></article><article><p>每天新增資料</p><strong id="storedDay"></strong><small>每分鐘上傳時數 × 儲存位元率。</small></article></div></section>
+  <section aria-label="資料傳出估算"><h2>資料傳出 <span>每次觀看都會傳送</span></h2><div class="cards"><article class="egress"><p>每天傳出資料</p><strong id="egressDay"></strong><small>所有觀看的影片資料量。</small></article><article class="egress"><p>每月傳出資料</p><strong id="egressMonth"></strong><small>以 30 天估算。</small></article></div></section>
+  <code id="formula"></code>
+  <p id="conclusion" class="conclusion"></p>
+  <p class="note">預設儲存位元率為 3.33 Mbps，因此在每分鐘上傳 100 小時時，新增儲存資料約為 2.5 GB/秒，與參考工具一致。使用十進位單位：1 GB = 1,000 MB、1 PB = 1,000 TB、1 EB = 1,000 PB。估算不含 CDN 快取命中率、重複觀看、多畫質轉碼、音訊、協定額外成本與儲存複寫；這些因素會改變實際容量與傳輸量。</p>
+</main></body></html>
