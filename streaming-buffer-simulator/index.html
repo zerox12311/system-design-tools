@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Streaming Buffer Simulator</title>
+  <link rel="stylesheet" href="./style.css?v=5" />
+  <script src="./script.js?v=5" defer></script>
+</head>
+<body>
+  <main class="simulator" aria-label="Streaming buffer simulator">
+    <section class="controls" aria-label="Playback controls">
+      <button id="playButton" class="button" type="button">
+        <span id="playIcon" class="button-icon" aria-hidden="true">▷</span>
+        <span id="playLabel">Play</span>
+      </button>
+      <button id="restartButton" class="button" type="button">
+        <span class="restart-icon" aria-hidden="true">↶</span>
+        <span>Restart</span>
+      </button>
+      <strong id="status" class="status idle" role="status" aria-live="polite">Idle</strong>
+    </section>
+
+    <section class="manifest-row" aria-label="Manifest state">
+      <div id="manifest" class="manifest"><code>manifest .m3u8</code><span id="manifestState"></span></div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <span class="manifest-result">lists 20 segments</span>
+    </section>
+
+    <section class="segments-section" aria-label="Video segments">
+      <p class="segments-label">segments — played, buffered ahead, not yet downloaded</p>
+      <div id="segments" class="segments"></div>
+      <div id="playhead" class="playhead" aria-hidden="true"></div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric-card">
+        <h2>Buffer ahead</h2>
+        <output id="bufferValue" class="buffer-value low">0.0 segments</output>
+      </article>
+
+      <article class="metric-card network-card">
+        <h2>Network (download speed)</h2>
+        <div id="networkSpeed" class="network-meter" role="meter" aria-label="Network download speed" aria-valuemin="0" aria-valuemax="100"><span></span></div>
+      </article>
+    </section>
+
+    <p class="explanation">Playback (the line) drains the buffer at a steady rate; downloads refill it. When the network drops below the playback rate, the buffer shrinks — and if it empties, playback has to pause and rebuffer.</p>
+  </main>
+</body>
+</html>
