@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>位元率與畫質模擬器</title>
+  <link rel="stylesheet" href="./style.css?v=1">
+  <script src="./script.js?v=1" defer></script>
+</head>
+<body>
+  <main class="tool">
+    <section class="preview" aria-label="畫質示意，僅供觀察">
+      <div class="section-label">畫質示意 <span>即時顯示 · 不可調整</span></div>
+      <canvas id="scene" width="960" height="540" role="img" aria-label="風景畫面的像素化示意；位元率越低，方塊越明顯。"></canvas>
+      <p class="note">拖曳右側滑桿，觀察畫面細節與檔案大小的變化。</p>
+    </section>
+    <section class="settings" aria-label="位元率設定與估算結果">
+      <div class="control">
+        <span class="badge">可調整 · 拖曳滑桿</span>
+        <div class="control-heading"><label for="bitrate">Bitrate（位元率）</label><output id="rate" for="bitrate">0.2 Mbps</output></div>
+        <input id="bitrate" type="range" min="0.2" max="8" step="0.1" value="0.2" aria-describedby="rangeHint">
+        <div id="rangeHint" class="range-labels"><span>0.2 Mbps · 低</span><span>8 Mbps · 高</span></div>
+      </div>
+      <article class="card"><span class="badge neutral">自動計算</span><h2>10 分鐘影片的大小</h2><output id="size" for="bitrate">15 MB</output><p>位元率 × 600 秒 ÷ 8</p></article>
+      <article class="card"><span class="badge neutral">參考情境</span><h2>常見使用情境</h2><output id="usage" for="bitrate">240p／低速行動網路</output></article>
+    </section>
+    <p class="footnote">畫面以像素化呈現概念，並非實際影片編碼。情境標籤沿用參考工具作示意，位元率不會單獨決定解析度或畫質；實際效果也取決於編碼格式、影格率與內容。大小以十進位 MB 估算，未另計音訊及封裝開銷。</p>
+  </main>
+</body>
+</html>
