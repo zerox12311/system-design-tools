@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CDN 快取流程模擬器</title>
+  <link rel="stylesheet" href="./style.css?v=1">
+  <script src="./script.js?v=1" defer></script>
+</head>
+<body>
+  <main class="tool">
+    <div class="controls">
+      <button id="play" type="button"><span class="play-icon">▷</span><span>播放</span></button>
+      <button id="restart" class="secondary" type="button"><span class="restart-icon">⟳</span><span>重新開始</span></button>
+      <p id="status" aria-live="polite">請按播放，所有快取目前都是空的。</p>
+    </div>
+
+    <section class="flow" aria-label="CDN 快取請求流程">
+      <div class="edges">
+        <article class="edge" data-region="NA"><div><strong>邊緣節點 · 北美</strong><span>快取：<b>0</b></span></div><p>等待請求</p></article>
+        <article class="edge" data-region="EU"><div><strong>邊緣節點 · 歐洲</strong><span>快取：<b>0</b></span></div><p>等待請求</p></article>
+        <article class="edge" data-region="APAC"><div><strong>邊緣節點 · 亞太</strong><span>快取：<b>0</b></span></div><p>等待請求</p></article>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="origins">
+        <div id="shield" class="origin">Origin Shield <span>快取：0</span></div>
+        <div id="storage" class="origin storage">Origin Storage</div>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="統計數字">
+      <article><p>請求數</p><strong id="requests">0</strong></article>
+      <article><p>Origin 讀取次數</p><strong id="originReads" class="blue">0</strong></article>
+      <article><p>快取命中率</p><strong id="hitRate" class="green">0%</strong></article>
+    </section>
+
+    <div class="progress"><span id="progressFill"></span></div>
+    <p class="explain">第一次請求會回源並填入 Edge Cache；同一個內容在相同區域再次被請求時，會直接由 Edge Cache 回應。Origin Shield 會讓不同區域的第一次請求也能共用中間快取。</p>
+  </main>
+</body>
+</html>
