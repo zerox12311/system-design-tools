@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>關鍵影格與差異影格</title>
+  <link rel="stylesheet" href="./style.css?v=1"><script src="./script.js?v=1" defer></script>
+</head>
+<body>
+<main class="tool">
+  <div class="modes" role="group" aria-label="編碼方式">
+    <button data-mode="delta" aria-pressed="true">關鍵影格 ＋ 差異影格</button>
+    <button data-mode="full" aria-pressed="false">每格都存完整畫面</button>
+  </div>
+  <div class="controls">
+    <button id="play">▶ 播放示範</button><button id="next">下一格 →</button><button id="reset">↶ 重設</button>
+    <span>可操作：切換方式、播放或逐格查看</span>
+  </div>
+  <div class="summary"><strong id="total"></strong><span id="saving"></span></div>
+  <p class="legend">影格是重建後的畫面；橘色虛線框標出位置變化。下方長條代表儲存資料量（示意單位）。</p>
+  <div class="scroll"><section id="frames" class="frames" aria-label="六個影格與資料量"></section></div>
+  <section class="explanation" aria-live="polite"><strong id="stepTitle"></strong><p id="caption"></p></section>
+  <p class="note">這是簡化示意：完整影格設為 10 單位，差異影格設為 2 單位。實際編碼會使用動作資訊與預測殘差，資料量取決於畫面變化及編碼方式；並不是只儲存虛線框裡的像素。</p>
+</main>
+</body>
+</html>
