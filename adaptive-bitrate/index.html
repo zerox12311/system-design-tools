@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自適應位元率串流示範</title>
+<link rel="stylesheet" href="./style.css?v=1"><script src="./script.js?v=1" defer></script>
+</head>
+<body><main class="tool">
+<div class="controls"><button id="play">▷ 播放</button><button id="next">下一個片段 →</button><button id="reset">↶ 重新開始</button><span id="status" role="status">按下播放開始</span></div>
+<p class="hint">可操作：播放、暫停或逐段查看。下方頻寬曲線與畫質結果為自動示範。</p>
+<div class="chart"><svg id="chart" viewBox="0 0 1100 265" role="img" aria-labelledby="chartTitle chartDesc"><title id="chartTitle">可用頻寬隨片段變化</title><desc id="chartDesc">頻寬先從 5 Mbps 下降至 0.9 Mbps，再恢復至 4.9 Mbps。播放器依頻寬選擇畫質。</desc><g id="grid"></g><polyline id="line" fill="none" stroke="#2860e8" stroke-width="3" stroke-linejoin="round"></polyline><line id="cursor" y1="25" y2="220" stroke="#768397" stroke-width="1.5" visibility="hidden"></line><circle id="dot" r="6" fill="#2860e8" visibility="hidden"></circle></svg></div>
+<div class="scroll"><section id="segments" class="segments" aria-label="各片段選擇的畫質"></section></div>
+<div class="legend" aria-label="畫質圖例"><span class="q1080">1080p</span><span class="q720">720p</span><span class="q480">480p</span><span class="q240">240p</span></div>
+<div class="insight" aria-live="polite"><strong id="decision">同一部影片，可以逐段選擇不同畫質。</strong><p id="reason">播放示範後，觀察頻寬下降時如何降低畫質，以及頻寬恢復後如何提高畫質。</p></div>
+<p class="note">簡化選擇規則：≥ 4 Mbps 選 1080p；≥ 2.5 選 720p；≥ 1.2 選 480p；其餘選 240p。這些門檻只用於本示範。實際 ABR 還會考慮緩衝量、頻寬估計與安全餘裕；畫質在片段之間切換。</p>
+</main></body></html>
