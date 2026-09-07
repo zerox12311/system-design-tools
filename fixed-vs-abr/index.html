@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>固定畫質與 ABR 比較</title><link rel="stylesheet" href="./style.css?v=1"><script src="./script.js?v=1" defer></script></head>
+<body><main class="tool">
+  <div class="controls"><button id="play">▷ 播放</button><button id="restart">↶ 重新開始</button><button class="mode active" data-mode="fixed">固定 1080p</button><button class="mode" data-mode="abr">自適應畫質（ABR）</button></div>
+  <p class="hint">可操作：切換策略、播放或暫停。頻寬情境固定，讓兩種策略能直接比較。</p>
+  <section class="metrics" aria-label="即時狀態（僅供觀察）"><article><span>可用頻寬</span><strong id="bandwidth">8.0 Mbps</strong></article><article><span>目前畫質</span><strong id="quality">1080p</strong></article><article><span>緩衝量</span><strong id="buffer" class="low">0.0 秒</strong></article></section>
+  <div class="buffer-track" aria-label="緩衝進度"><div id="bufferBar"></div></div>
+  <div class="status-row"><strong id="status">尚未開始</strong><span id="rebuffers">重新緩衝：0</span></div>
+  <section class="explanation" aria-live="polite"><strong id="title">固定畫質會持續要求 1080p 的下載速度。</strong><p id="reason">播放後，頻寬會從 8.0 Mbps 降到 1.4 Mbps，再恢復至 8.0 Mbps。比較固定畫質與 ABR 對緩衝的影響。</p></section>
+  <p class="note">教學模擬：1080p 需要 5.0 Mbps、720p 需要 2.5 Mbps、480p 需要 1.0 Mbps。每一個時間片段的下載速度由可用頻寬決定。真實播放器還會考慮下載估計、切換門檻及裝置能力。</p>
+</main></body></html>
