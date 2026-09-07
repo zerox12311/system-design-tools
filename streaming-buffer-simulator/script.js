@@ -4,13 +4,6 @@ const MAX_BUFFER_AHEAD = 5;
 const BEFORE_MANIFEST_MS = 300;
 const MANIFEST_DELAY_MS = 700;
 const PLAYBACK_RATE = 1.6;
-// Scripted network conditions, measured in active download time.
-const NETWORK_STAGES = [
-  { until: 2, level: 'High', rate: 5, fill: 100 },
-  { until: 6, level: 'Low', rate: 0.5, fill: 16 },
-  { until: 7.2, level: 'Medium', rate: 2.2, fill: 50 },
-  { until: Infinity, level: 'High', rate: 4.4, fill: 88 }
-];
 
 const elements = {
   playButton: document.getElementById('playButton'),
@@ -23,7 +16,8 @@ const elements = {
   segments: document.getElementById('segments'),
   playhead: document.getElementById('playhead'),
   bufferValue: document.getElementById('bufferValue'),
-  networkSpeed: document.getElementById('networkSpeed')
+  networkSpeed: document.getElementById('networkSpeed'),
+  networkValue: document.getElementById('networkValue')
 };
 
 const state = {
@@ -51,30 +45,26 @@ function bufferAhead() {
   return Math.max(0, state.downloaded - state.position);
 }
 
-function networkStage() {
-  return NETWORK_STAGES.find(stage => state.networkTime < stage.until);
-}
-
 function networkRate() {
-  return networkStage().rate;
+  return Number(elements.networkSpeed.value);
 }
 
 function setPhase(phase) {
   state.phase = phase;
   elements.status.textContent = {
-    idle: 'Idle',
-    reading: 'Reading Manifest',
-    playing: 'Playing',
-    buffering: 'Buffering…',
-    paused: 'Paused',
-    ended: 'Done'
+    idle: '尚未開始',
+    reading: '讀取播放清單',
+    playing: '播放中',
+    buffering: '緩衝中…',
+    paused: '已暫停',
+    ended: '播放完畢'
   }[phase];
   elements.status.className = `status ${phase}`;
 }
 
 function updateControls() {
   const running = state.requestedPlayback && state.phase !== 'ended';
-  elements.playLabel.textContent = running ? 'Pause' : 'Play';
+  elements.playLabel.textContent = running ? '暫停' : '播放';
   elements.playIcon.textContent = running ? 'Ⅱ' : '▷';
   elements.playButton.setAttribute('aria-pressed', String(running));
 }
@@ -82,25 +72,23 @@ function updateControls() {
 function render() {
   const buffer = bufferAhead();
   const percent = Math.min(100, (state.position / TOTAL_SEGMENTS) * 100);
-  const network = networkStage();
-  const fill = `${network.fill}%`;
+  const fill = `${networkRate() / 5 * 100}%`;
 
   elements.manifest.classList.toggle('reading', state.phase === 'reading');
   elements.manifest.classList.toggle('done', state.manifestRead);
-  elements.manifestState.textContent = state.phase === 'reading' ? 'reading…' : state.manifestRead ? 'read ✓' : '';
+  elements.manifestState.textContent = state.phase === 'reading' ? '讀取中…' : state.manifestRead ? '已讀取 ✓' : '';
   elements.playhead.style.left = `${percent}%`;
-  elements.bufferValue.value = `${buffer.toFixed(1)} segments`;
-  elements.bufferValue.textContent = `${buffer.toFixed(1)} segments`;
+  elements.bufferValue.value = `${buffer.toFixed(1)} 個片段`;
+  elements.bufferValue.textContent = `${buffer.toFixed(1)} 個片段`;
   elements.bufferValue.classList.toggle('low', buffer < 1);
   elements.networkSpeed.style.setProperty('--fill', fill);
   elements.networkSpeed.classList.toggle('slow', networkRate() < PLAYBACK_RATE);
-  elements.networkSpeed.setAttribute('aria-valuenow', String(network.fill));
-  elements.networkSpeed.setAttribute('aria-valuetext', network.level);
+  elements.networkValue.textContent = `每秒 ${networkRate().toFixed(1)} 個片段`;
+  elements.networkSpeed.setAttribute('aria-valuetext', elements.networkValue.textContent);
 
   segmentElements.forEach((segment, index) => {
-    const finalSegment = state.phase === 'ended' && index === TOTAL_SEGMENTS - 1;
-    segment.classList.toggle('played', index < Math.floor(state.position) && !finalSegment);
-    segment.classList.toggle('buffered', finalSegment || (index >= Math.floor(state.position) && index < Math.ceil(state.downloaded)));
+    segment.classList.toggle('played', index < Math.floor(state.position));
+    segment.classList.toggle('buffered', index >= Math.floor(state.position) && index < Math.floor(state.downloaded));
   });
 
   updateControls();
@@ -134,7 +122,7 @@ function tick(time) {
   state.downloaded = Math.min(downloadLimit, state.downloaded + networkRate() * elapsed);
   state.networkTime += elapsed;
 
-  if (state.phase === 'buffering' && bufferAhead() >= STARTUP_BUFFER) setPhase('playing');
+  if (state.phase === 'buffering' && (bufferAhead() >= STARTUP_BUFFER || state.downloaded === TOTAL_SEGMENTS)) setPhase('playing');
 
   if (state.phase === 'playing') {
     const playable = Math.min(PLAYBACK_RATE * elapsed, bufferAhead());
@@ -201,5 +189,6 @@ elements.playButton.addEventListener('click', () => {
 });
 
 elements.restartButton.addEventListener('click', restart);
+elements.networkSpeed.addEventListener('input', render);
 
 render();

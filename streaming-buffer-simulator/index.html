@@ -3,49 +3,56 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Streaming Buffer Simulator</title>
-  <link rel="stylesheet" href="./style.css?v=5" />
-  <script src="./script.js?v=5" defer></script>
+  <title>串流播放與緩衝模擬器</title>
+  <link rel="stylesheet" href="./style.css?v=6" />
+  <script src="./script.js?v=6" defer></script>
 </head>
 <body>
-  <main class="simulator" aria-label="Streaming buffer simulator">
-    <section class="controls" aria-label="Playback controls">
+  <main class="simulator" aria-label="串流播放與緩衝模擬器">
+    <section class="controls" aria-label="播放控制">
       <button id="playButton" class="button" type="button">
         <span id="playIcon" class="button-icon" aria-hidden="true">▷</span>
-        <span id="playLabel">Play</span>
+        <span id="playLabel">播放</span>
       </button>
       <button id="restartButton" class="button" type="button">
         <span class="restart-icon" aria-hidden="true">↶</span>
-        <span>Restart</span>
+        <span>重新開始</span>
       </button>
-      <strong id="status" class="status idle" role="status" aria-live="polite">Idle</strong>
+      <strong id="status" class="status idle" role="status" aria-live="polite">尚未開始</strong>
     </section>
 
-    <section class="manifest-row" aria-label="Manifest state">
+    <section class="manifest-row" aria-label="播放清單狀態（自動顯示）">
       <div id="manifest" class="manifest"><code>manifest .m3u8</code><span id="manifestState"></span></div>
       <span class="arrow" aria-hidden="true">→</span>
-      <span class="manifest-result">lists 20 segments</span>
+      <span class="manifest-result">播放清單包含 20 個片段</span>
     </section>
 
-    <section class="segments-section" aria-label="Video segments">
-      <p class="segments-label">segments — played, buffered ahead, not yet downloaded</p>
+    <section class="segments-section" aria-label="影片片段（僅供觀察）">
+      <p class="segments-label">片段進度 · 僅供觀察</p>
+      <p class="legend"><span>灰色：已播放</span><span>綠色：已緩衝</span><span>淺灰色：未下載</span><span>直線：播放位置</span></p>
       <div id="segments" class="segments"></div>
       <div id="playhead" class="playhead" aria-hidden="true"></div>
     </section>
 
     <section class="metrics">
       <article class="metric-card">
-        <h2>Buffer ahead</h2>
-        <output id="bufferValue" class="buffer-value low">0.0 segments</output>
+        <span class="badge">即時顯示 · 不可調整</span>
+        <h2>預先緩衝量</h2>
+        <output id="bufferValue" class="buffer-value low">0.0 個片段</output>
+        <p class="hint">播放速率固定為每秒 1.6 個片段。</p>
       </article>
 
       <article class="metric-card network-card">
-        <h2>Network (download speed)</h2>
-        <div id="networkSpeed" class="network-meter" role="meter" aria-label="Network download speed" aria-valuemin="0" aria-valuemax="100"><span></span></div>
+        <span class="badge editable">可調整 · 拖曳滑桿</span>
+        <label for="networkSpeed">網路下載速度</label>
+        <output id="networkValue" for="networkSpeed">每秒 5.0 個片段</output>
+        <input id="networkSpeed" type="range" min="0" max="5" step="0.1" value="5" aria-describedby="networkHint" />
+        <div class="range-labels"><span>0 · 斷線</span><span>5 · 高速</span></div>
+        <p id="networkHint" class="hint">拖曳圓形把手調整速度，也可使用方向鍵。</p>
       </article>
     </section>
 
-    <p class="explanation">Playback (the line) drains the buffer at a steady rate; downloads refill it. When the network drops below the playback rate, the buffer shrinks — and if it empties, playback has to pause and rebuffer.</p>
+    <p class="explanation">試著把下載速度降到每秒 1.6 個片段以下：緩衝量會逐漸減少，耗盡時播放線會停住。提高速度後，累積足夠緩衝就會繼續播放。重新開始會保留你設定的速度。</p>
   </main>
 </body>
 </html>

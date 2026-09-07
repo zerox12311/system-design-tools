@@ -202,6 +202,23 @@ input:focus-visible { outline: 3px solid #93b4ff; outline-offset: 3px; }
 
 .network-meter.slow span { background: #b75a1c; }
 
+.network-card { border: 2px solid #9cb7ee; background: #f2f6ff; }
+.badge { display: inline-block; font-size: 14px; color: #526177; margin-bottom: 14px; }
+.badge.editable { color: #234ea5; font-weight: 700; }
+.hint, .legend, .range-labels { font-size: 16px; line-height: 1.5; color: #526177; }
+.hint { margin: 16px 0 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 12px; }
+.range-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+#networkValue { display: block; font-size: 20px; margin: -8px 0 18px; color: #234ea5; }
+#networkSpeed {
+  display: block; appearance: none; width: 100%; height: 12px;
+  margin: 10px 0; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(to right, #3862e9 var(--fill), #dce3ee var(--fill));
+}
+#networkSpeed.slow { background: linear-gradient(to right, #b75a1c var(--fill), #dce3ee var(--fill)); }
+#networkSpeed::-webkit-slider-thumb { width: 28px; height: 28px; border: 3px solid white; box-shadow: 0 1px 5px #64748b; }
+#networkSpeed::-moz-range-thumb { width: 22px; height: 22px; border: 3px solid white; box-shadow: 0 1px 5px #64748b; }
+
 .network-card input::-webkit-slider-thumb {
   width: 27px;
   height: 27px;
